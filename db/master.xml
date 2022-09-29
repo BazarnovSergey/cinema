@@ -8,4 +8,6 @@
     <include file="scripts/003_ddl_init_users.sql" relativeToChangelogFile="true"/>
     <include file="scripts/001_ddl_init_sessions.sql" relativeToChangelogFile="true"/>
     <include file="scripts/002_ddl_init_ticket.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/004_ddl_constraint_ticket_unique.sql" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>
