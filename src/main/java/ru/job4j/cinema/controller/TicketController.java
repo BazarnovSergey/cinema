@@ -14,6 +14,7 @@ import ru.job4j.cinema.service.TicketService;
 import ru.job4j.cinema.util.CheckHttpSession;
 
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 @Controller
 public class TicketController {
@@ -32,21 +33,12 @@ public class TicketController {
         Ticket sessionTicket = (Ticket) httpSession.getAttribute("ticket");
         CheckHttpSession.checkUserAuthorization(model, user);
         sessionTicket.setUserId(user.getId());
-        Ticket tempTicket = ticketService.findBySessionIdAndRowAndCell(
-                sessionTicket.getSessionId(),
-                sessionTicket.getRow(),
-                sessionTicket.getCell());
-        if (tempTicket != null
-                && sessionTicket.getSessionId() == tempTicket.getSessionId()
-                && sessionTicket.getRow() == tempTicket.getRow()
-                && sessionTicket.getCell() == tempTicket.getCell()
-        ) {
-            return "failPurchase";
-        } else {
-            ticketService.add(sessionTicket);
+        Optional<Ticket> optionalTicket = ticketService.add(sessionTicket);
+        if (optionalTicket.isPresent()) {
             return "successfulPurchase";
+        } else {
+            return "failPurchase";
         }
-
     }
 
     @GetMapping("/showInfo")

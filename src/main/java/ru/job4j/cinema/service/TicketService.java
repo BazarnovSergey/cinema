@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.job4j.cinema.model.Ticket;
 import ru.job4j.cinema.store.TicketDBStore;
 
+import java.util.Optional;
+
 @ThreadSafe
 @Service
 public class TicketService {
@@ -15,12 +17,8 @@ public class TicketService {
         this.ticketDBStore = ticketDBStore;
     }
 
-    public Ticket add(Ticket ticket) {
+    public Optional<Ticket> add(Ticket ticket) {
         return ticketDBStore.add(ticket);
-    }
-
-    public Ticket findBySessionIdAndRowAndCell(int sessionId, int row, int cell) {
-        return ticketDBStore.findBySessionIdAndRowAndCell(sessionId, row, cell);
     }
 
 }

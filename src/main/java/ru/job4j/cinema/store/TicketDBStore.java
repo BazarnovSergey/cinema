@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @ThreadSafe
 @Repository
@@ -24,7 +25,7 @@ public class TicketDBStore {
 
     private static final Logger LOG = LoggerFactory.getLogger(TicketDBStore.class.getName());
 
-    public Ticket add(Ticket ticket) {
+    public Optional<Ticket> add(Ticket ticket) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
                      "INSERT INTO ticket (session_id,pos_row,cell,user_id) VALUES (?,?,?,?)",
@@ -42,31 +43,9 @@ public class TicketDBStore {
             }
         } catch (Exception e) {
             LOG.error("exception: ", e);
+            return Optional.empty();
         }
-        return ticket;
-    }
-
-    public Ticket findBySessionIdAndRowAndCell(int sessionId, int row, int cell) {
-        try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("SELECT * FROM ticket "
-                     + "WHERE session_id = ? AND pos_row = ? AND cell = ?")
-        ) {
-            ps.setInt(1, sessionId);
-            ps.setInt(2, row);
-            ps.setInt(3, cell);
-            try (ResultSet it = ps.executeQuery()) {
-                if (it.next()) {
-                    return new Ticket(it.getInt("id"),
-                            it.getInt("session_id"),
-                            it.getInt("pos_row"),
-                            it.getInt("cell"),
-                            it.getInt("user_id"));
-                }
-            }
-        } catch (Exception e) {
-            LOG.error("exception: ", e);
-        }
-        return null;
+        return Optional.of(ticket);
     }
 
     public List<Ticket> purchasedTicketsInRow(int sessionId, int row) {
