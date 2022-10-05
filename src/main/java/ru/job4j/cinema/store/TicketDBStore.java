@@ -10,6 +10,7 @@ import ru.job4j.cinema.model.Ticket;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,26 +49,36 @@ public class TicketDBStore {
         return Optional.of(ticket);
     }
 
-    public List<Ticket> purchasedTicketsInRow(int sessionId, int row) {
+    /**
+     * @param sessionId - id сессии
+     * @param row       - ряд
+     * @return возвращает коллекцию List с оплаченными билетами в ряду
+     */
+    public List<Ticket> findBySessionIdAndRow(int sessionId, int row) {
         List<Ticket> tickets = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("SELECT * FROM ticket WHERE session_id = ? AND pos_row = ?")
+             PreparedStatement ps = cn.prepareStatement(
+                     "SELECT * FROM ticket WHERE session_id = ? AND pos_row = ?")
         ) {
             ps.setInt(1, sessionId);
             ps.setInt(2, row);
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    tickets.add(new Ticket(it.getInt("id"),
-                            it.getInt("session_id"),
-                            it.getInt("pos_row"),
-                            it.getInt("cell"),
-                            it.getInt("user_id")));
+                    tickets.add(getTicketFromResultSet(it));
                 }
             }
         } catch (Exception e) {
             LOG.error("exception: ", e);
         }
         return tickets;
+    }
+
+    private Ticket getTicketFromResultSet(ResultSet it) throws SQLException {
+        return new Ticket(it.getInt("id"),
+                it.getInt("session_id"),
+                it.getInt("pos_row"),
+                it.getInt("cell"),
+                it.getInt("user_id"));
     }
 
 }

@@ -46,7 +46,7 @@ public class SessionController {
         sessionTicket.setSessionId(id);
         httpSession.setAttribute("ticket", sessionTicket);
         model.addAttribute("session", sessionService.findById(id));
-        model.addAttribute("rows", sessionService.rows());
+        model.addAttribute("rows", sessionService.getRowNumbers());
         User user = (User) httpSession.getAttribute("user");
         checkUserAuthorization(model, user);
         model.addAttribute("user", user);

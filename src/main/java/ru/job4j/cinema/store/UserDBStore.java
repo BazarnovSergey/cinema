@@ -10,6 +10,7 @@ import ru.job4j.cinema.model.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Optional;
 
 @ThreadSafe
@@ -57,17 +58,21 @@ public class UserDBStore {
             ps.setString(2, password);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    return Optional.of(new User(
-                            it.getInt("id"),
-                            it.getString("username"),
-                            it.getString("email"),
-                            it.getString("password"),
-                            it.getString("phone")));
+                    return Optional.of(getUserFromResultSet(it));
                 }
             }
         } catch (Exception e) {
             LOG.error("exception: ", e);
         }
         return Optional.empty();
+    }
+
+    private User getUserFromResultSet(ResultSet it) throws SQLException {
+        return new User(
+                it.getInt("id"),
+                it.getString("username"),
+                it.getString("email"),
+                it.getString("password"),
+                it.getString("phone"));
     }
 }

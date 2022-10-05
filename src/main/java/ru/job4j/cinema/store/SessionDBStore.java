@@ -10,6 +10,7 @@ import ru.job4j.cinema.model.Session;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,9 +32,7 @@ public class SessionDBStore {
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    sessions.add(new Session(it.getInt("id"),
-                            it.getString("name"),
-                            it.getBytes("poster")));
+                    sessions.add(getSessionFromResultSet(it));
                 }
             }
         } catch (Exception e) {
@@ -69,15 +68,19 @@ public class SessionDBStore {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    return new Session(it.getInt("id"),
-                            it.getString("name"),
-                            it.getBytes("poster"));
+                    return getSessionFromResultSet(it);
                 }
             }
         } catch (Exception e) {
             LOG.error("exception: ", e);
         }
         return null;
+    }
+
+    private Session getSessionFromResultSet(ResultSet it) throws SQLException {
+        return new Session(it.getInt("id"),
+                it.getString("name"),
+                it.getBytes("poster"));
     }
 
 }
