@@ -57,7 +57,7 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute User user, HttpServletRequest req) {
-        Optional<User> userDb = userService.findUserByEmailAndPwd(
+        Optional<User> userDb = userService.findUserByEmailAndPassword(
                 user.getEmail(), user.getPassword()
         );
         if (userDb.isEmpty()) {

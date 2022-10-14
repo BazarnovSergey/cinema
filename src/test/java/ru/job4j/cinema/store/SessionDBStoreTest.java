@@ -1,7 +1,10 @@
 package ru.job4j.cinema.store;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.jupiter.api.Test;
-import ru.job4j.cinema.Main;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.job4j.cinema.config.DataSourceConfig;
 import ru.job4j.cinema.model.Session;
 
 import java.util.List;
@@ -13,7 +16,9 @@ class SessionDBStoreTest {
 
     @Test
     void whenFindAll() {
-        SessionDBStore store = new SessionDBStore(new Main().loadPool());
+        ApplicationContext context = new AnnotationConfigApplicationContext(DataSourceConfig.class);
+        BasicDataSource pool = context.getBean("loadPool",BasicDataSource.class);
+        SessionDBStore store = new SessionDBStore(pool);
         Session session = new Session(0, "session name", new byte[0]);
         store.add(session);
         List<Session> sessionList = store.findAll();
@@ -22,7 +27,9 @@ class SessionDBStoreTest {
 
     @Test
     void whenAdd() {
-        SessionDBStore store = new SessionDBStore(new Main().loadPool());
+        ApplicationContext context = new AnnotationConfigApplicationContext(DataSourceConfig.class);
+        BasicDataSource pool = context.getBean("loadPool",BasicDataSource.class);
+        SessionDBStore store = new SessionDBStore(pool);
         Session session = new Session(0, "session name", new byte[0]);
         store.add(session);
         Session sessionInDb = store.findById(session.getId());
@@ -31,7 +38,9 @@ class SessionDBStoreTest {
 
     @Test
     void whenFindById() {
-        SessionDBStore store = new SessionDBStore(new Main().loadPool());
+        ApplicationContext context = new AnnotationConfigApplicationContext(DataSourceConfig.class);
+        BasicDataSource pool = context.getBean("loadPool",BasicDataSource.class);
+        SessionDBStore store = new SessionDBStore(pool);
         Session session = new Session(0, "session name", new byte[0]);
         Session sessionTwo = new Session(1, "session name", new byte[0]);
         store.add(session);

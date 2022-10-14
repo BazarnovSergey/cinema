@@ -49,7 +49,7 @@ public class UserDBStore {
         return result;
     }
 
-    public Optional<User> findUserByEmailAndPwd(String email, String password) {
+    public Optional<User> findUserByEmailAndPassword(String email, String password) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
                      "SELECT * FROM users WHERE email = ? AND password = ? ")
