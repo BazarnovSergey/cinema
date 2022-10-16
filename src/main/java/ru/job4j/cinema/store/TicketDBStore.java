@@ -50,6 +50,8 @@ public class TicketDBStore {
     }
 
     /**
+     * метод находит в базе данных все купленные билеты в ряду
+     *
      * @param sessionId - id сессии
      * @param row       - ряд
      * @return возвращает коллекцию List с оплаченными билетами в ряду

@@ -3,7 +3,6 @@ package ru.job4j.cinema.service;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
 import ru.job4j.cinema.model.Session;
-import ru.job4j.cinema.model.Ticket;
 import ru.job4j.cinema.store.SessionDBStore;
 import ru.job4j.cinema.store.TicketDBStore;
 
@@ -46,13 +45,10 @@ public class SessionService {
         return new ArrayList<>(CELL_NUMBERS);
     }
 
-    private List<Ticket> getByPosRowAndMovieId(int sessionId, int posRow) {
-        return ticketDBStore.findBySessionIdAndRow(sessionId, posRow);
-    }
-
     public List<Integer> getFreeCells(int sessionId, int posRow) {
         List<Integer> cells = getCellNumbers();
-        getByPosRowAndMovieId(sessionId, posRow).forEach(x -> {
+        TicketService ticketService = new TicketService(ticketDBStore);
+        ticketService.getByPosRowAndMovieId(sessionId, posRow).forEach(x -> {
             if (cells.contains(x.getCell())) {
                 cells.remove(Integer.valueOf(x.getCell()));
             }
