@@ -18,6 +18,7 @@ import ru.job4j.cinema.service.SessionService;
 import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static ru.job4j.cinema.util.CheckHttpSession.checkUserAuthorization;
 
@@ -73,12 +74,12 @@ public class SessionController {
 
     @GetMapping("/posterSession/{sessionId}")
     public ResponseEntity<Resource> download(@PathVariable("sessionId") Integer sessionId) {
-        Session session = sessionService.findById(sessionId);
-        return ResponseEntity.ok()
+        Optional<Session> session = sessionService.findById(sessionId);
+        return session.<ResponseEntity<Resource>>map(value -> ResponseEntity.ok()
                 .headers(new HttpHeaders())
-                .contentLength(session.getPoster().length)
+                .contentLength(value.getPoster().length)
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .body(new ByteArrayResource(session.getPoster()));
+                .body(new ByteArrayResource(value.getPoster()))).orElse(null);
     }
 
     @GetMapping("/formChoiceCell")

@@ -2,11 +2,12 @@
 
 #### В этом проекте используются такие технологии как:
 
-1.Spring boot<br/>
-2.Thymeleaf<br/>
-3.Bootstrap<br/>
-4.JDBC<br/>
-5.PostgreSQL<br/>
+1. Spring boot 2.5.2
+2. Thymeleaf 3.0.15
+3. Bootstrap 4
+4. JDBC
+5. PostgreSQL 14
+6. Java 17
 
 
 #### Для сборки проекта понадобятся:

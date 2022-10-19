@@ -8,6 +8,7 @@ import ru.job4j.cinema.store.TicketDBStore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @ThreadSafe
@@ -33,7 +34,7 @@ public class SessionService {
         return sessionDBStore.add(session);
     }
 
-    public Session findById(int id) {
+    public Optional<Session> findById(int id) {
         return sessionDBStore.findById(id);
     }
 

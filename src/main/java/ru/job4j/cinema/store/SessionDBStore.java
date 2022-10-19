@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @ThreadSafe
 @Repository
@@ -61,20 +62,20 @@ public class SessionDBStore {
         return session;
     }
 
-    public Session findById(int id) {
+    public Optional<Session> findById(int id) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement("SELECT * FROM sessions WHERE id = ?")
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    return getSessionFromResultSet(it);
+                    return Optional.of(getSessionFromResultSet(it));
                 }
             }
         } catch (Exception e) {
             LOG.error("exception: ", e);
         }
-        return null;
+        return Optional.empty();
     }
 
     private Session getSessionFromResultSet(ResultSet it) throws SQLException {
