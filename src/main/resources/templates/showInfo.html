@@ -46,7 +46,7 @@
     <form th:action="@{/createTicket}" method="POST">
         <div class="form-group">
             Покупатель: <p th:text="${user.getUsername()}"></p>
-            Фильм: <p th:text="${movie.getName()}"></p>
+            Фильм: <p th:text="${movie.get().getName()}"></p>
             Ряд: <p th:text="${ticket.getRow()}"></p>
             Место: <p th:text="${ticket.getCell()}"></p>
             <div>
